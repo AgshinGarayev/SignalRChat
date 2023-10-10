@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using SignalRChat.DAL;
 using SignalRChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+builder.Services.AddControllers();
+builder.Services.AddDbContext<MessageDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AppDb"));
+});
+
 
 var app = builder.Build();
 
@@ -20,6 +28,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.MapControllers();
 
 app.UseAuthorization();
 
